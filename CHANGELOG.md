@@ -6,6 +6,10 @@
 
 - Layout > Scrolling switches the focused window's workspace to the scrolling layout.
 
+### Fixes
+
+- Borders stay on while focus moves during an animation, such as scrolling the scrolling layout. Before, the borders of the window losing focus and the one gaining it blinked off until the windows arrived.
+
 ## 0.16
 
 ### Tiling
