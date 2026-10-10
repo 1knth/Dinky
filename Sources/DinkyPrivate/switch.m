@@ -287,7 +287,9 @@ static bool cursor_is_on_display(CGDirectDisplayID displayID)
 }
 
 // mimi MimiFocusSpaceUsingGesture, augmented branch. mimi pumps the run loop after every step and
-// once more for count+1 delays at the end; we skip the wait after the last step, Swift polls instead.
+// once more for count+1 delays at the end. We post the steps back to back and let Swift poll for the
+// landing: with a pause between steps the display lands on each Space on the way, and macOS activates
+// the front app there, which puts it into the Cmd-Tab order. Back to back, only the last one counts.
 //
 // The Dock swipes the display under the cursor; nothing in the event or the IOHID payload names a
 // display. So, as mimi, yabai and bobrwm do, warp the cursor to the centre of the target display
@@ -311,12 +313,10 @@ static bool mimi_post_swipes(double sign, int count, CGDirectDisplayID displayID
     }
 
     bool posted = true;
-    for (int i = 0; i < count && posted; i++) {
-        posted = mimi_post_swipe(sign);
-        if (warp || i < count - 1) pump(kMimiStepDelay);  // with a warp, let the last swipe land first
-    }
+    for (int i = 0; i < count && posted; i++) posted = mimi_post_swipe(sign);
 
     if (warp) {
+        pump(kMimiStepDelay);  // let the swipes land before the cursor leaves the display
         CGWarpMouseCursorPosition(restore);
         // A warp holds back real mouse movement for a moment; reattaching the mouse ends that.
         CGAssociateMouseAndMouseCursorPosition(true);
