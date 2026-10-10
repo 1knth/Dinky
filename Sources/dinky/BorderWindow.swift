@@ -10,6 +10,13 @@ final class BorderWindow {
         var cornerRadius: Int
         var color: DinkyConfig.Color
         var width: Double
+
+        /// The same shape in another colour.
+        func with(color: DinkyConfig.Color) -> Look {
+            var look = self
+            look.color = color
+            return look
+        }
     }
 
     private let target: UInt32
@@ -33,9 +40,7 @@ final class BorderWindow {
     func update(_ window: Window, color: DinkyConfig.Color, config: Borders, moveOnly: Bool = false) {
         let look = Look(size: window.frame.size, cornerRadius: window.cornerRadius,
                         color: color, width: config.width)
-        if moveOnly, drawn.map({ Look(size: $0.size, cornerRadius: $0.cornerRadius, color: color, width: $0.width) }) != look {
-            return hide()
-        }
+        if moveOnly, drawn?.with(color: color) != look { return hide() }
         let scale = backingScale(of: window.frame)
         if scale != self.scale { recreate(scale: scale) }
         guard id != 0 else { return }
