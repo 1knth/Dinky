@@ -23,7 +23,7 @@ prints it.
 | `move <left\|down\|up\|right>` | Move the focused window in the tree. |
 | `join-with <left\|down\|up\|right>` | Put the focused window and its neighbour in a new container. |
 | `resize <smart\|width\|height> <+n\|-n>` | Resize by n points. |
-| `layout <tiles\|accordion\|horizontal\|vertical\|auto\|h_tiles\|v_tiles\|h_accordion\|v_accordion\|floating\|tiling>...` | Set the container's layout, or float/tile the window. Given several, applies the first that isn't current, so `layout floating tiling` toggles. |
+| `layout <tiles\|accordion\|horizontal\|vertical\|auto\|h_tiles\|v_tiles\|h_accordion\|v_accordion\|floating\|tiling\|scrolling>...` | Set the container's layout, float/tile the window, or switch the workspace to [scrolling](configuration.md#scrolling); a container layout switches it back. Given several, applies the one after the current one, so `layout floating tiling` toggles and `layout tiles accordion scrolling` cycles. |
 | `fullscreen` | Toggle filling the workspace (not macOS full screen). |
 | `flatten-workspace-tree` | Put every window back into the workspace's configured layout. |
 | `balance-sizes` | Give every window an equal share. |

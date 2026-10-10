@@ -68,6 +68,9 @@ struct SchemaTests {
         padding = 20
         orientation = 'keep'
 
+        [scrolling]
+        column-width = 0.5
+
         [gaps]
         inner.horizontal = 4
         inner.vertical = 6

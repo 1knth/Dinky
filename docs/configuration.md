@@ -25,7 +25,7 @@ permalink: /configuration/
 |---|---|---|
 | `start-at-login` | `true` | Register as a login item. |
 | `workspaces` | `5` | Workspaces across all displays, one native Space each. dinky creates and removes Spaces to match. |
-| `default-layout` | `'tiles'` | `'tiles'` (the existing dwindle layout), `'dwindle'`, `'accordion'`, or `'fixed'`. |
+| `default-layout` | `'tiles'` | `'tiles'` (the existing dwindle layout), `'dwindle'`, `'accordion'`, `'fixed'`, or `'scrolling'`. |
 | `default-tiling` | `true` | Set `false` to leave workspaces untiled unless overridden. |
 | `follow-app-activation` | `true` | Cmd-Tab and Dock clicks switch Spaces the fast way. Needs the macOS "switch to a Space with open windows" setting off. |
 | `float-windows-without-fullscreen` | `true` | Float windows that can't go full screen, such as Finder's copy progress, About This Mac and Calculator. Terminals and editors that can hide their title bar still tile. A `layout tiling` rule tiles a window anyway. |
@@ -69,6 +69,51 @@ run = 'move-window-to-workspace 2'
 remains available; conceptually it resembles a 1×1 fixed template with accordion
 overflow, but keeps the existing accordion orientation behavior. Workspace
 numbering starts at 1.
+
+## Scrolling
+
+`layout = 'scrolling'` lays a workspace out as a row of columns that runs past
+the edges of the display, as niri and Hyprland's scrolling layout do. Each new
+window opens as a column right of the focused one, `column-width` wide whatever
+the number of columns. A lone column fills the display; columns that fit are
+centred; focusing a column scrolls just far enough to show it whole.
+
+macOS can't hide part of another app's window, so a column scrolled out of view
+is parked: it hangs off the display edge with a 25-point sliver left on, and the
+columns in view keep an inner gap clear of it. Where another display sits beyond that edge, the column stops
+at the border instead and waits behind the columns in view.
+
+Commands work on columns. `focus left` and `right` move between columns, `up`
+and `down` within one. `move left` and `right` swap the column with its
+neighbour, or take a window that shares its column out into a new column.
+`join-with left` and `right` put the window into the neighbouring column.
+`resize width` (and `smart`) changes the column's width, `resize height` the
+window's share of its column; `balance-sizes` resets them all. Hover focus
+leaves columns that are not wholly in view alone; a click scrolls to them.
+
+```toml
+[workspace.1]
+layout = 'scrolling'
+```
+
+`layout scrolling` switches the focused workspace to scrolling on the fly, and
+`layout tiles` or `accordion` switches it back to its tree. The switch holds
+until you switch again. To cycle all three on one key:
+
+```toml
+[mode.main]
+ctrl-alt-cmd-s = 'layout tiles accordion scrolling'
+```
+
+## `[scrolling]`
+
+<div class="wide-table" markdown="1">
+
+| Key | Default | |
+|---|---|---|
+| `column-width` | `0.49` | A new column's width, as a share of the display inside the outer gaps, from `0.1` to `1`. Omarchy's `0.49` fits two columns side by side. |
+
+</div>
 
 ## `[accordion]`
 
@@ -245,7 +290,7 @@ The default `alt-` bindings take over Option-letter characters.
 
 start-at-login = true
 workspaces = 5                  # across all displays, one native Space each
-default-layout = 'tiles'        # tiles (dwindle) | dwindle | accordion | fixed
+default-layout = 'tiles'        # tiles (dwindle) | dwindle | accordion | fixed | scrolling
 default-tiling = true           # false leaves workspaces untiled unless overridden
 follow-app-activation = true    # Cmd-Tab and Dock clicks switch Spaces the fast way
 float-windows-without-fullscreen = true   # progress windows, About, Calculator and the like float
@@ -263,6 +308,9 @@ float-windows-without-fullscreen = true   # progress windows, About, Calculator 
 [accordion]
 padding = 30                    # points the neighbours peek out by
 orientation = 'auto'            # auto: run along the container's longer side | keep
+
+[scrolling]
+column-width = 0.49             # a new column's share of the display; a lone column fills it
 
 [gaps]
 inner = 8                       # or { horizontal = 8, vertical = 8 }

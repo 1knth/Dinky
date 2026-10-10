@@ -23,6 +23,7 @@ public struct Config: Equatable {
     /// Float standard windows whose fullscreen button is missing or disabled, as AeroSpace does.
     public var floatWindowsWithoutFullscreen = true
     public var accordion = Accordion()
+    public var scrolling = Scrolling()
     public var gaps = Gaps()
     /// `[display.<pattern>]` overrides, in file order.
     public var displays: [DisplayOverride] = []
@@ -106,6 +107,7 @@ public struct Config: Equatable {
         followAppActivation = try t.bool("follow-app-activation") ?? followAppActivation
         floatWindowsWithoutFullscreen = try t.bool("float-windows-without-fullscreen") ?? floatWindowsWithoutFullscreen
         accordion = try t.table("accordion").map(Accordion.init) ?? accordion
+        scrolling = try t.table("scrolling").map(Scrolling.init) ?? scrolling
         gaps = try t.table("gaps").map { try gaps.applying(GapsPatch($0)) } ?? gaps
         if let displayTable = try t.table("display") {
             for pattern in displayTable.keys {
@@ -128,7 +130,7 @@ public struct Config: Equatable {
 }
 
 public enum LayoutKind: String, CaseIterable {
-    case tiles, dwindle, accordion, fixed
+    case tiles, dwindle, accordion, fixed, scrolling
 }
 
 public enum ExpansionKind: String, CaseIterable {
@@ -189,6 +191,21 @@ public struct Accordion: Equatable {
     init(_ t: Table) throws {
         padding = try t.int("padding") ?? padding
         orientation = try t.choice("orientation") ?? orientation
+        try t.done()
+    }
+}
+
+/// `[scrolling]`: the scrolling layout's columns.
+public struct Scrolling: Equatable {
+    /// A new column's width, as a share of the display's width inside the outer gaps. Omarchy's 0.49 fits two
+    /// columns side by side with a sliver of margin; a lone column always fills the display.
+    public var columnWidth = 0.49
+
+    public init() {}
+
+    init(_ t: Table) throws {
+        columnWidth = try t.double("column-width") ?? columnWidth
+        guard (0.1...1).contains(columnWidth) else { throw ConfigError(path: t.path("column-width"), "must be 0.1 to 1") }
         try t.done()
     }
 }
