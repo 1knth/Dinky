@@ -34,8 +34,21 @@ permalink: /configuration/
 
 ## `[workspace.<number>]`
 
-Override `default-tiling` or `default-layout` for a globally numbered
-workspace. `layout = 'fixed'` reserves every cell in its template from the start.
+Override the top-level `default-tiling` and `default-layout` for a globally
+numbered workspace.
+
+<div class="wide-table" markdown="1">
+
+| Key | Default | |
+|---|---|---|
+| `tiling` | `default-tiling` | Whether the workspace tiles. |
+| `layout` | `default-layout` | Its layout, with the same values. |
+| `columns`, `rows` | `1` | A fixed layout's template. |
+| `expand` | `'columns'` | What a fixed layout does when every cell is taken. |
+
+</div>
+
+ `layout = 'fixed'` reserves every cell in its template from the start.
 `rows` and `columns` each default to `1`; with two columns and three rows, one
 window occupies one sixth of the workspace, and an empty cell stays empty when
 another window closes. New windows fill holes first, left to right, top to bottom.
@@ -65,7 +78,8 @@ app-id = 'com.mitchellh.ghostty'
 run = 'move-window-to-workspace 2'
 ```
 
-`rows`, `columns`, and `expand` apply only to a fixed layout. `layout = 'accordion'`
+`rows`, `columns`, and `expand` are only allowed with a fixed layout; with any
+other they are a config error. `layout = 'accordion'`
 remains available; conceptually it resembles a 1×1 fixed template with accordion
 overflow, but keeps the existing accordion orientation behavior. Workspace
 numbering starts at 1.
@@ -96,7 +110,7 @@ leaves columns that are not wholly in view alone; a click scrolls to them.
 layout = 'scrolling'
 ```
 
-`layout scrolling` switches the focused workspace to scrolling on the fly, and
+`layout scrolling` switches the focused window's workspace to scrolling on the fly, and
 `layout tiles` or `accordion` switches it back to its tree. The switch holds
 until you switch again. To cycle all three on one key:
 
@@ -207,6 +221,10 @@ gaps.outer.top = 44
 
 ## `[drag]`
 
+Drag a tiled window's edge to resize it; the other tiles make room, and in the
+scrolling layout its column takes the new width. Drag the window itself and
+drop it on another tile to swap the two; dropped anywhere else, it goes back.
+
 <div class="wide-table" markdown="1">
 
 | Key | Default | |
@@ -225,22 +243,27 @@ environment `exec-and-forget` gets.
 | Key | Runs |
 |---|---|
 | `startup` | Once, after dinky has read the windows and displays. |
-| `workspace-changing` | When a dinky switch starts, before it lands. |
+| `workspace-changing` | When a dinky switch starts, before it lands, and again when a burst of switches changes the target. |
 | `workspace-changed` | When a display's workspace changes, or a switch gives up. |
 | `focus-changed` | When focus changes, debounced 50 ms. |
-| `mode-changed` | When the binding mode changes. Sets `DINKY_MODE` and `DINKY_PREV_MODE`. |
+| `mode-changed` | When the binding mode changes, including back to `main` when the config reloads. Sets `DINKY_MODE` and `DINKY_PREV_MODE`. |
 
 </div>
 
 ## `[[rules]]`
 
 Every rule whose conditions all match a new window runs, in order. Dialogs,
-sheets, panels and fixed-size windows float without one, as do windows that
-can't go full screen while `float-windows-without-fullscreen` is on.
+sheets, panels and fixed-size windows always float. Windows that can't go full
+screen float too while `float-windows-without-fullscreen` is on, unless a
+`layout tiling` rule tiles them.
+
+A rule that is exactly `layout floating` or `layout tiling` decides before the
+window is placed, the last one winning. Every other rule command runs once the
+window is placed, on that window.
 
 New windows open on the focused display, whichever display the app picked. A
-rule that runs a command other than `layout` for a window, such as
-`move-window-to-workspace`, decides where it goes instead.
+rule that moves the window, such as `move-window-to-workspace`, decides where
+it goes instead.
 
 <div class="wide-table" markdown="1">
 
@@ -345,8 +368,8 @@ duration-ms = 150               # roughly how long a window takes to arrive
 [drag]
 placeholders = true             # outline where a dragged tile came from and the tile it will swap with
 
-# dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE, $DINKY_DISPLAY,
-# and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
+# dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE and $DINKY_DISPLAY
+# in the workspace hooks, and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
 # [hooks]
 # startup = ['exec-and-forget brew services restart sketchybar']
 # workspace-changed = ['exec-and-forget sketchybar --trigger workspace_change']

@@ -65,8 +65,8 @@ extension Config {
     [drag]
     placeholders = true             # outline where a dragged tile came from and the tile it will swap with
 
-    # dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE, $DINKY_DISPLAY,
-    # and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
+    # dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE and $DINKY_DISPLAY
+    # in the workspace hooks, and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
     # [hooks]
     # startup = ['exec-and-forget brew services restart sketchybar']
     # workspace-changed = ['exec-and-forget sketchybar --trigger workspace_change']

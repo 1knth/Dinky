@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Menu
+
+- Layout > Scrolling switches the focused window's workspace to the scrolling layout.
+
 ## 0.16
 
 ### Tiling
