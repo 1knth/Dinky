@@ -293,6 +293,16 @@ struct ConfigTests {
         assertError("[drag]\nghost = true\n", path: "drag.ghost", line: 2, contains: "unknown key")
     }
 
+    @Test func `Modifier sides`() throws {
+        #expect(Config.default.modifiers == ModifierSides())
+        let config = try Config.parse("[modifiers]\nalt = 'left'\nshift = 'right'\n")
+        #expect(config.modifiers.alt == .left)
+        #expect(config.modifiers.ctrl == .both)
+        #expect(config.modifiers.shift == .right)
+        assertError("[modifiers]\nalt = 'up'\n", path: "modifiers.alt", line: 2, contains: "'both', 'left', 'right'")
+        assertError("[modifiers]\nfn = 'left'\n", path: "modifiers.fn", line: 2, contains: "unknown key")
+    }
+
     @Test func `Load from missing file fails`() {
         let error = #expect(throws: ConfigError.self) {
             try Config.load(from: URL(fileURLWithPath: "/nonexistent/dinky.toml"))

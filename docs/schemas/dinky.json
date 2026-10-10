@@ -177,6 +177,17 @@
         }
       }
     },
+    "modifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Which key of each modifier pair bindings answer to. The other key types as usual.",
+      "properties": {
+        "alt": { "enum": ["both", "left", "right"], "default": "both", "description": "Which Option key is alt in bindings." },
+        "ctrl": { "enum": ["both", "left", "right"], "default": "both", "description": "Which Control key is ctrl in bindings." },
+        "cmd": { "enum": ["both", "left", "right"], "default": "both", "description": "Which Command key is cmd in bindings." },
+        "shift": { "enum": ["both", "left", "right"], "default": "both", "description": "Which Shift key is shift in bindings." }
+      }
+    },
     "hooks": {
       "type": "object",
       "additionalProperties": false,

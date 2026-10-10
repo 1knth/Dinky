@@ -31,6 +31,7 @@ public struct Config: Equatable {
     public var focusFollowsMouse = FocusFollowsMouse()
     public var animations = Animations()
     public var drag = Drag()
+    public var modifiers = ModifierSides()
     public var hooks = Hooks()
     /// `[[rules]]`, in file order.
     public var rules: [WindowRule] = []
@@ -118,6 +119,7 @@ public struct Config: Equatable {
         focusFollowsMouse = try t.table("focus-follows-mouse").map(FocusFollowsMouse.init) ?? focusFollowsMouse
         animations = try t.table("animations").map(Animations.init) ?? animations
         drag = try t.table("drag").map(Drag.init) ?? drag
+        modifiers = try t.table("modifiers").map(ModifierSides.init) ?? modifiers
         hooks = try t.table("hooks").map(Hooks.init) ?? hooks
         rules = try t.tables("rules")?.map(WindowRule.init) ?? []
         if let modeTable = try t.table("mode") {
@@ -285,6 +287,30 @@ public struct Drag: Equatable {
 
     init(_ t: Table) throws {
         placeholders = try t.bool("placeholders") ?? placeholders
+        try t.done()
+    }
+}
+
+/// Which of a modifier's two keys bindings answer to.
+public enum ModifierSide: String, CaseIterable {
+    case both, left, right
+}
+
+/// `[modifiers]`: a modifier limited to one side is only a binding's modifier from that side's key; the other
+/// key types as usual, so right Option can still make special characters while left Option drives dinky.
+public struct ModifierSides: Equatable {
+    public var alt = ModifierSide.both
+    public var ctrl = ModifierSide.both
+    public var cmd = ModifierSide.both
+    public var shift = ModifierSide.both
+
+    public init() {}
+
+    init(_ t: Table) throws {
+        alt = try t.choice("alt") ?? alt
+        ctrl = try t.choice("ctrl") ?? ctrl
+        cmd = try t.choice("cmd") ?? cmd
+        shift = try t.choice("shift") ?? shift
         try t.done()
     }
 }

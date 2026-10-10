@@ -65,6 +65,14 @@ extension Config {
     [drag]
     placeholders = true             # outline where a dragged tile came from and the tile it will swap with
 
+    # Which key of each pair bindings answer to: both | left | right. With alt = 'left',
+    # right Option still types special characters.
+    [modifiers]
+    alt = 'both'
+    ctrl = 'both'
+    cmd = 'both'
+    shift = 'both'
+
     # dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE and $DINKY_DISPLAY
     # in the workspace hooks, and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
     # [hooks]

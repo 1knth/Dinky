@@ -111,6 +111,12 @@ struct SchemaTests {
         [drag]
         placeholders = false
 
+        [modifiers]
+        alt = 'left'
+        ctrl = 'right'
+        cmd = 'both'
+        shift = 'both'
+
         [hooks]
         startup = 'exec-and-forget true'
         workspace-changing = ['exec-and-forget true']

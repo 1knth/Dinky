@@ -233,6 +233,23 @@ drop it on another tile to swap the two; dropped anywhere else, it goes back.
 
 </div>
 
+## `[modifiers]`
+
+Which key of each modifier pair a binding's modifier means. Limit `alt` to one
+side and the other Option key types special characters as usual: with
+`alt = 'left'`, left Option-h focuses left and right Option-h types `˙`.
+
+<div class="wide-table" markdown="1">
+
+| Key | Default | |
+|---|---|---|
+| `alt` | `'both'` | `'both'`, `'left'` or `'right'`: which Option key is `alt` in bindings. |
+| `ctrl` | `'both'` | The same for Control. |
+| `cmd` | `'both'` | The same for Command. |
+| `shift` | `'both'` | The same for Shift. |
+
+</div>
+
 ## `[hooks]`
 
 Commands run on events. See [Scripting](commands.md#scripting) for the
@@ -301,7 +318,8 @@ Modifiers (`alt`, `ctrl`, `cmd`, `shift`) and one key, joined by `-`:
 - `keypad-0`–`keypad-9`, `keypad-clear` `keypad-decimal` `keypad-divide`
   `keypad-enter` `keypad-equal` `keypad-minus` `keypad-multiply` `keypad-plus`
 
-The default `alt-` bindings take over Option-letter characters.
+The default `alt-` bindings take over Option-letter characters; set
+`[modifiers] alt = 'left'` to keep right Option for typing them.
 
 ## Default config
 
@@ -367,6 +385,14 @@ duration-ms = 150               # roughly how long a window takes to arrive
 
 [drag]
 placeholders = true             # outline where a dragged tile came from and the tile it will swap with
+
+# Which key of each pair bindings answer to: both | left | right. With alt = 'left',
+# right Option still types special characters.
+[modifiers]
+alt = 'both'
+ctrl = 'both'
+cmd = 'both'
+shift = 'both'
 
 # dinky commands run on events. exec-and-forget gets $DINKY_WORKSPACE, $DINKY_PREV_WORKSPACE and $DINKY_DISPLAY
 # in the workspace hooks, and $DINKY_MODE, $DINKY_PREV_MODE in mode-changed.
