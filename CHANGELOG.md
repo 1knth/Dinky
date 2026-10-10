@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Key bindings
+
+- New `[modifiers]` table picks which key of each modifier pair your bindings answer to: `'both'` (the default), `'left'` or `'right'`. With `alt = 'left'`, left Option runs dinky's bindings and right Option types special characters like `˙` and `≈` as usual.
+
 ## 0.17
 
 ### Menu
