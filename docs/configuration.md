@@ -79,8 +79,8 @@ the number of columns. A lone column fills the display; columns that fit are
 centred; focusing a column scrolls just far enough to show it whole.
 
 macOS can't hide part of another app's window, so a column scrolled out of view
-is parked: it hangs off the display edge with a 25-point sliver left on, and the
-columns in view keep an inner gap clear of it. Where another display sits beyond that edge, the column stops
+is parked: it hangs off the display edge with a sliver of at least 25 points
+left on, an inner gap from the columns in view. Where another display sits beyond that edge, the column stops
 at the border instead and waits behind the columns in view.
 
 Commands work on columns. `focus left` and `right` move between columns, `up`
