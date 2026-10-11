@@ -1,10 +1,30 @@
 # Changelog
 
-## Unreleased
+## 0.18
+
+### Key bindings
+
+- New `[modifiers]` table picks which key of each modifier pair your bindings answer to: `'both'` (the default), `'left'` or `'right'`. With `alt = 'left'`, left Option runs dinky's bindings and right Option types special characters like `˙` and `≈` as usual.
+
+## 0.17
+
+### Menu
+
+- Layout > Scrolling switches the focused window's workspace to the scrolling layout.
 
 ### Fixes
 
-- Workspace switching uses the legacy gesture encoding only on macOS 15; all other macOS major versions use the augmented encoding.
+- Switching more than one workspace away no longer stops on the workspaces in between. Before, macOS briefly activated the app on each one it passed, which put that app into the Cmd-Tab order. Multi-step switches are faster too.
+- Borders stay on while focus moves during an animation, such as scrolling the scrolling layout. Before, the borders of the window losing focus and the one gaining it blinked off until the windows arrived.
+- Switching workspaces works with natural scrolling off. Before, on macOS 27 the swipe went the wrong way and bounced back to the workspace you were on, and following an app from the Dock or Cmd-Tab failed the same way.
+- Switching workspaces on macOS before 27 uses the swipe those versions understand. Before, it bounced back there too.
+
+## 0.16
+
+### Tiling
+
+- New `scrolling` layout, after niri and Hyprland: windows open as columns in a row that scrolls past the display edges to the focused one. Columns are 0.49 of the display wide by default, as Omarchy sets them (`[scrolling] column-width`); a lone column fills the display. Columns out of view hang off the edge with a sliver showing, an inner gap from the columns in view, or wait behind the columns in view where another display is beyond.
+- `layout scrolling` switches the focused workspace to scrolling and `layout tiles` or `accordion` back, and `layout` with several names now cycles through them: `layout tiles accordion scrolling`.
 
 ## 0.15
 
